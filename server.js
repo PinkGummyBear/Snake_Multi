@@ -49,8 +49,6 @@ io.on('connection', (socket) => {
             socket.emit('setAIMode', false); // Disable AI mode
         }
     });
-});
-
 
     // Handle game over event
     socket.on('gameOver', (score) => {
