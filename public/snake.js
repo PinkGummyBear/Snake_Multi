@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiCheckbox = document.getElementById('aiCheckbox');
     // Inside the aiCheckbox event listener
     aiCheckbox.addEventListener('change', () => {
-    const allowedDevices = new Set(['unique-device-id-xxhkd81as']);  // Add your device ID here
+    const allowedDevices = new Set(['unique-device-id-2m89ye103']); 
 
     const aiMode = allowedDevices.has(deviceId);
     socket.emit('setAIMode', aiMode);  // Send AI mode status to the client
