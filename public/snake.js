@@ -20,14 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     socket.on('setAIMode', (isEnabled) => {
-        aiMode = isEnabled; // Actually update the global AI mode
-        console.log("AI Mode:", aiMode ? "Enabled" : "Disabled");
-        if (aiMode) {
-            aiCheckbox.style.display = 'block'; // Show the checkbox if allowed
-        } else {
-            aiCheckbox.style.display = 'none'; // Hide the checkbox if not allowed
-        }
-    });
+    aiMode = isEnabled; // Update local variable
+    aiCheckbox.checked = isEnabled; // Ensure the checkbox updates
+});
+
     
     
     
