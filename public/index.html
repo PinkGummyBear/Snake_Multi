@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake Game</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    canvas {
+      border: 2px solid #333;
+      background-color: #ddd;
+      display: none; /* Initially hide canvas */
+    }
+    #startMenu, #optionsMenu, #gameOverScreen {
+      text-align: center;
+    }
+    #optionsMenu, #gameOverScreen {
+      display: none; /* Initially hide options and game over screens */
+    }
+    #scoreboard {
+      position: absolute;
+      left: 50px; /* Adjust this value to move the scoreboard slightly to the left */
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="startMenu" class="container">
+    <h1>Welcome to Snake Game</h1>
+    <button id="startButton" class="btn btn-primary btn-lg">Start Game</button>
+    <div class="mt-3">
+      <button id="optionsButton" class="btn btn-secondary">Options</button>
+    </div>
+  </div>
+  <div id="optionsMenu" class="container">
+    <h1>Options Menu</h1>
+    <label for="snakeColorSelect">Snake Color:</label>
+    <select id="snakeColorSelect" class="form-control">
+      <option value="green">Green</option>
+      <option value="blue">Blue</option>
+      <option value="red">Red</option>
+    </select>
+    <div class="mt-3">
+        <input type="range" class="form-control-range" id="soundVolume" min="0" max="1" step="0.1" value="1">
+        <label for="soundVolume">Sound Volume:</label>
+    </div>
+    <div class="mt-3">
+      <button id="backToStartButton" class="btn btn-primary">Back to Start Menu</button>
+    </div>
+  </div>
+
+  <div id="scoreboard" style="display: none;">
+    <p>Score: <span id="currentScore">0</span></p>
+    <p>High Score: <span id="highScore">0</span></p>
+  </div>
+  <div id="gameOverScreen" class="container" style="display: none;">
+    <h1>Game Over!</h1>
+    <p>Your score: <span id="finalScore"></span></p>
+    <p>High score: <span id="finalHighScore"></span></p>
+    
+    <div class="mt-3">
+      <button id="retryButton" class="btn btn-success">Retry</button>
+      <button id="exitButton" class="btn btn-danger">Exit</button>
+    </div>
+  </div>
+
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Bootstrap JS (Optional: Only if you need Bootstrap functionality) -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="snake.js" defer></script>
+</body>
+</html>
