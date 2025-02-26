@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     aiMode = isEnabled; // Update local variable
     aiCheckbox.checked = isEnabled; // Ensure the checkbox updates
     snakeColor = aiMode ? "pink" : "green";
+    document.getElementById('snakeColorSelect').disabled = true;
 });
 
     
