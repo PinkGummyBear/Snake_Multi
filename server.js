@@ -5,52 +5,70 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const sessionID = 'default-room'; // Force all players into this room
-
-// Serve static files (your HTML, JS, and CSS)
-app.use(express.static('public'));
+const sessionID = 'default-room';
 
 let playerScores = {};
-let rooms = {}; // To keep track of rooms and players in them
+let rooms = {};
 
-// When a player connects
+const allowedDeviceIds = new Set(['unique-device-id-2m89ye103']);
+
+app.use(express.static('public'));
+
 io.on('connection', (socket) => {
     console.log('A player connected');
 
-    // Use the fixed session ID for all players
-    console.log(`Player connected to session: ${sessionID}`);
+    // Listen for joinRoom event
+    socket.on('joinRoom', (data) => {
+        const { sessionID, deviceId } = data;
 
-    // Ensure the room exists
-    if (!rooms[sessionID]) {
-        rooms[sessionID] = [];
-    }
-    if (!playerScores[sessionID]) {
-        playerScores[sessionID] = {}; // Keep scores separate per session
-    }
+        // If the room doesn't exist, create it
+        if (!rooms[sessionID]) {
+            rooms[sessionID] = [];
+        }
 
-    // Add player to the room
-    rooms[sessionID].push(socket.id);
-    socket.join(sessionID);
-    console.log(`Player ${socket.id} joined room ${sessionID}`);
+        // Initialize player scores for the room if necessary
+        if (!playerScores[sessionID]) {
+            playerScores[sessionID] = {};
+        }
 
+        rooms[sessionID].push(socket.id);
+        socket.join(sessionID);
+        console.log(`Player ${socket.id} joined room ${sessionID}`);
+    });
+
+    // Listen for setAIMode event
+    socket.on('setAIMode', (data) => {
+        const { aiMode, deviceId } = data;
+
+        // Check if the deviceId is in the allowed list
+        if (allowedDeviceIds.has(deviceId)) {
+            console.log(`Device ${deviceId} is allowed to use AI mode.`);
+            socket.emit('setAIMode', true); // Enable AI mode
+        } else {
+            console.log(`Device ${deviceId} is not allowed to use AI mode.`);
+            socket.emit('setAIMode', false); // Disable AI mode
+        }
+    });
+});
+
+
+    // Handle game over event
     socket.on('gameOver', (score) => {
         console.log(`Received gameOver event from ${socket.id} with score:`, score);
-    
-        // Ensure session score object exists
+
+        // Initialize the playerScores if necessary
         if (!playerScores[sessionID]) {
-            playerScores[sessionID] = {}; // Create an empty object for this session
+            playerScores[sessionID] = {};
         }
-    
-        // Store the score for this player
+
         playerScores[sessionID][socket.id] = score;
-        console.log(`Updated playerScores:`, playerScores);
-    
-        // If two players have finished, determine the result
+
+        // If both players have finished the game
         if (Object.keys(playerScores[sessionID]).length === 2) {
             const [player1, player2] = Object.keys(playerScores[sessionID]);
             const score1 = playerScores[sessionID][player1];
             const score2 = playerScores[sessionID][player2];
-    
+
             let winner;
             if (score1 > score2) {
                 winner = player1;
@@ -59,8 +77,7 @@ io.on('connection', (socket) => {
             } else {
                 winner = "It's a draw!";
             }
-    
-            // Send results to both players
+
             io.to(sessionID).emit("gameResult", {
                 winner,
                 player1Score: score1,
@@ -68,30 +85,27 @@ io.on('connection', (socket) => {
                 player1Id: player1,
                 player2Id: player2
             });
-    
-            // Reset game state for next match
+
             delete playerScores[sessionID];
             rooms[sessionID] = [];
         }
     });
-    
-    
 
+    // Handle player disconnection
     socket.on('disconnect', () => {
         console.log(`Player ${socket.id} disconnected`);
 
         // Remove player from the room
         rooms[sessionID] = rooms[sessionID].filter(id => id !== socket.id);
 
-        // If room is empty, clean up
+        // Clean up if no players remain in the room
         if (rooms[sessionID].length === 0) {
             delete rooms[sessionID];
             delete playerScores[sessionID];
         }
     });
-});
 
-// Start the server on port 3000
+
 server.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
 });
