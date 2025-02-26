@@ -75,9 +75,13 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('setAIMode', ({ aiMode, deviceId }) => {
-        console.log(`AI Mode changed by ${deviceId}: ${aiMode}`);
-        io.emit('setAIMode', aiMode); // Broadcast to all clients
-    });
+    if (deviceId === "unique-device-id-2m89ye103") {
+        io.emit('setAIMode', aiMode);
+    } else {
+        console.log(`Unauthorized device (${deviceId}) tried to change AI mode.`);
+    }
+});
+
     
     
 
