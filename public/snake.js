@@ -20,14 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     socket.on('setAIMode', (aiMode) => {
-        const aiCheckbox = document.getElementById('aiCheckbox'); // Assuming the checkbox has this ID
-    
+        const aiCheckbox = document.getElementById('aiCheckbox');
         if (aiMode) {
-            aiCheckbox.style.display = 'block';  // Show the checkbox if the device is allowed
+            aiCheckbox.style.display = 'block'; // Show the checkbox if allowed
         } else {
-            aiCheckbox.style.display = 'none';  // Hide the checkbox if the device is not allowed
+            aiCheckbox.style.display = 'none'; // Hide the checkbox if not allowed
         }
     });
+    
     
 
    
@@ -82,21 +82,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiCheckbox = document.getElementById('aiCheckbox');
     // Inside the aiCheckbox event listener
     aiCheckbox.addEventListener('change', () => {
-    const allowedDevices = new Set(['unique-device-id-2m89ye103']); 
-
-    const aiMode = allowedDevices.has(deviceId);
-    socket.emit('setAIMode', aiMode);  // Send AI mode status to the client
-
-
-    // If AI mode is enabled, set snake color to pink
-    if (aiMode) {
-        document.getElementById('snakeColorSelect').disabled = true;
-        snakeColor = 'pink';
-    } else {
-        document.getElementById('snakeColorSelect').disabled = false;
-        snakeColor = document.getElementById('snakeColorSelect').value;
-    }
-});
+        const allowedDevices = new Set(['unique-device-id-2m89ye103']);  // Add your device ID here
+    
+        const aiMode = allowedDevices.has(deviceId);
+        socket.emit('setAIMode', { aiMode, deviceId });  // Send AI mode status and deviceId to the server
+    
+        // If AI mode is enabled, set snake color to pink
+        if (aiMode) {
+            document.getElementById('snakeColorSelect').disabled = true;
+            snakeColor = 'pink';
+        } else {
+            document.getElementById('snakeColorSelect').disabled = false;
+            snakeColor = document.getElementById('snakeColorSelect').value;
+        }
+    });
 
 
     const snakeHeadImage = new Image();
