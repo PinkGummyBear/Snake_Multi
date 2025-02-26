@@ -81,8 +81,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const aiCheckbox = document.getElementById('aiCheckbox');
     // Inside the aiCheckbox event listener
-aiCheckbox.addEventListener('change', () => {
-    aiMode = aiCheckbox.checked;
+    aiCheckbox.addEventListener('change', () => {
+    const allowedDevices = new Set(['unique-device-id-xxhkd81as']);  // Add your device ID here
+
+    const aiMode = allowedDevices.has(deviceId);
+    socket.emit('setAIMode', aiMode);  // Send AI mode status to the client
+
 
     // If AI mode is enabled, set snake color to pink
     if (aiMode) {
