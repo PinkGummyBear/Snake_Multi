@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('setAIMode', (isEnabled) => {
     aiMode = isEnabled; // Update local variable
     aiCheckbox.checked = isEnabled; // Ensure the checkbox updates
+    snakeColor = aiMode ? "pink" : "green";
 });
 
     
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.onload = function() {
     if (deviceId !== allowedDeviceId) {
         document.getElementById("aiCheckbox").style.display = "none";
+        document.getElementById("ailabel").style.display = "none";
     }
 };
 
