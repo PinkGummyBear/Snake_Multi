@@ -34,10 +34,9 @@ io.on('connection', (socket) => {
         rooms[sessionID].push(socket.id);
         socket.join(sessionID);
         console.log(`Player ${socket.id} joined room ${sessionID}`);
-
-        // The server doesn't need to check or send AI mode anymore
-        // The client will handle AI mode based on its own allowedDevices list
     });
+
+    // Listen for setAIMode event
     socket.on('setAIMode', (data) => {
         const { aiMode, deviceId } = data;
 
@@ -50,6 +49,8 @@ io.on('connection', (socket) => {
             socket.emit('setAIMode', false); // Disable AI mode
         }
     });
+}); // Ensure the connection handler is properly closed here.
+
 
     // Handle game over event
     socket.on('gameOver', (score) => {
