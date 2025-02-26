@@ -26,7 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
     
-    
+    const allowedDeviceId = "unique-device-id-2m89ye103"; 
+
+// Hide the checkbox if this device isn't the allowed one
+window.onload = function() {
+    if (deviceId !== allowedDeviceId) {
+        document.getElementById("aiCheckbox").style.display = "none";
+    }
+};
 
    
     let gameSpeed = 100;
