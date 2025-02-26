@@ -34,9 +34,10 @@ io.on('connection', (socket) => {
         rooms[sessionID].push(socket.id);
         socket.join(sessionID);
         console.log(`Player ${socket.id} joined room ${sessionID}`);
-    });
 
-    // Listen for setAIMode event
+        // The server doesn't need to check or send AI mode anymore
+        // The client will handle AI mode based on its own allowedDevices list
+    });
     socket.on('setAIMode', (data) => {
         const { aiMode, deviceId } = data;
 
@@ -102,7 +103,7 @@ io.on('connection', (socket) => {
             delete playerScores[sessionID];
         }
     });
-
+});
 
 server.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
