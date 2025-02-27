@@ -26,6 +26,44 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('snakeColorSelect').disabled = true;
 });
 
+let touchStartX = 0, touchStartY = 0;
+let touchEndX = 0, touchEndY = 0;
+
+document.addEventListener("touchstart", function(event) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+}, false);
+
+document.addEventListener("touchmove", function(event) {
+    touchEndX = event.touches[0].clientX;
+    touchEndY = event.touches[0].clientY;
+}, false);
+
+document.addEventListener("touchend", function() {
+    handleSwipe();
+}, false);
+
+function handleSwipe() {
+    let deltaX = touchEndX - touchStartX;
+    let deltaY = touchEndY - touchStartY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 30) changeDirection("RIGHT");
+        else if (deltaX < -30) changeDirection("LEFT");
+    } else {
+        // Vertical swipe
+        if (deltaY > 30) changeDirection("DOWN");
+        else if (deltaY < -30) changeDirection("UP");
+    }
+}
+
+function changeDirection(newDirection) {
+    if (newDirection === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+    if (newDirection === "UP" && direction !== "DOWN") direction = "UP";
+    if (newDirection === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+    if (newDirection === "DOWN" && direction !== "UP") direction = "DOWN";
+}
     
     
     const allowedDeviceId = "unique-device-id-2m89ye103"; 
